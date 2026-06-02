@@ -21,7 +21,7 @@ export const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) return;
+    if (!form.name || !form.email || !form.phone) return;
 
     setLoading(true);
 
@@ -179,10 +179,11 @@ export const Contact = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Phone */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold text-white uppercase tracking-wider">Phone Number</label>
+                    <label className="text-[10px] font-bold text-white uppercase tracking-wider">Phone Number *</label>
                     <input 
                       type="text" 
                       name="phone"
+                      required
                       value={form.phone}
                       onChange={handleChange}
                       placeholder="+1 (555) 000-0000"
@@ -207,10 +208,9 @@ export const Contact = () => {
 
                 {/* Message */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-bold text-white uppercase tracking-wider">Tell us about your objectives *</label>
+                  <label className="text-[10px] font-bold text-white uppercase tracking-wider">Tell us about your objectives</label>
                   <textarea 
                     name="message"
-                    required
                     rows={4}
                     value={form.message}
                     onChange={handleChange}

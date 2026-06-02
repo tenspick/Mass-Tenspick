@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Compass, Zap, BarChart4 } from 'lucide-react';
 
@@ -9,8 +10,9 @@ export const HowItWorks = () => {
       subtitle: 'Mapping your objectives',
       desc: 'Schedule a 15-minute briefing session. We audit your existing marketing, review competitor strategies, understand your target demographics, and establish growth goals.',
       icon: Phone,
-      color: 'from-[#00D4FF] to-[#6C63FF]',
-      shadow: 'shadow-primary/20'
+      color: 'text-sky-600',
+      bg: 'bg-sky-50 border-sky-100',
+      glow: 'from-sky-500 to-blue-500'
     },
     {
       num: '02',
@@ -18,8 +20,9 @@ export const HowItWorks = () => {
       subtitle: 'Defining the blueprint',
       desc: 'Our senior strategists design a comprehensive marketing blueprint for your subscription. We outline exact deliverables, target keywords, custom funnels, and CRM setup.',
       icon: Compass,
-      color: 'from-[#6C63FF] to-[#00FFB2]',
-      shadow: 'shadow-secondary/20'
+      color: 'text-indigo-600',
+      bg: 'bg-indigo-50 border-indigo-100',
+      glow: 'from-indigo-500 to-purple-500'
     },
     {
       num: '03',
@@ -27,8 +30,9 @@ export const HowItWorks = () => {
       subtitle: 'Turning plans into reality',
       desc: 'Our writers create copy, designers build assets, developers code web pages, and media buyers deploy campaigns. All tracked inside your unified dashboard.',
       icon: Zap,
-      color: 'from-[#00FFB2] to-[#00D4FF]',
-      shadow: 'shadow-accent/20'
+      color: 'text-emerald-600',
+      bg: 'bg-emerald-50 border-emerald-100',
+      glow: 'from-emerald-500 to-teal-500'
     },
     {
       num: '04',
@@ -36,22 +40,23 @@ export const HowItWorks = () => {
       subtitle: 'Compounding daily returns',
       desc: 'We analyze daily lead reports and ad metrics, running continuous split-tests. Successful angles receive scaled budgets, and weekly reports detail exact ROI.',
       icon: BarChart4,
-      color: 'from-[#00D4FF] to-[#6C63FF]',
-      shadow: 'shadow-primary/20'
+      color: 'text-rose-600',
+      bg: 'bg-rose-50 border-rose-100',
+      glow: 'from-rose-500 to-pink-500'
     }
   ];
 
   return (
-    <section id="how-it-works" className="py-24 relative bg-[#050505] overflow-hidden">
+    <section id="how-it-works" className="py-24 relative bg-[#FFFFFF] overflow-hidden border-t border-slate-200">
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[40vw] rounded-full bg-secondary/5 blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[40vw] rounded-full bg-primary/5 blur-[130px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 md:px-12">
         {/* Title */}
-        <div className="text-center flex flex-col gap-3 mb-20">
-          <span className="text-xs font-bold tracking-widest text-accent uppercase">The Process</span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white">Growth In Four Simple Steps</h2>
-          <p className="text-muted-text text-sm sm:text-base max-w-xl mx-auto">
+        <div className="text-center flex flex-col gap-3 mb-24">
+          <span className="text-xs font-bold tracking-widest text-primary uppercase">The Process</span>
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900">Growth In Four Simple Steps</h2>
+          <p className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto">
             From setup to scaling, we run a unified marketing engine so you can focus on building your core business.
           </p>
         </div>
@@ -59,12 +64,13 @@ export const HowItWorks = () => {
         {/* Vertical Timeline */}
         <div className="relative">
           {/* Central Line (Desktop Only) */}
-          <div className="absolute left-[50%] top-8 bottom-8 w-0.5 bg-gradient-to-b from-primary via-secondary to-accent opacity-10 hidden md:block" />
+          <div className="absolute left-[50%] top-8 bottom-8 w-0.5 bg-gradient-to-b from-primary via-secondary to-accent opacity-20 hidden md:block" />
 
           {/* Steps */}
-          <div className="flex flex-col gap-12 md:gap-24">
+          <div className="flex flex-col gap-16 md:gap-24">
             {steps.map((step, idx) => {
               const isEven = idx % 2 === 0;
+              const Icon = step.icon;
               return (
                 <div 
                   key={step.num}
@@ -74,20 +80,22 @@ export const HowItWorks = () => {
                 >
                   {/* Content Card */}
                   <motion.div 
-                    initial={{ opacity: 0, x: isEven ? -40 : 40 }}
+                    initial={{ opacity: 0, x: isEven ? -60 : 60 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.7 }}
-                    className="w-full md:w-[45%] p-8 rounded-3xl bg-white/[0.01] border border-white/5 card-glow relative"
+                    transition={{ type: 'spring', stiffness: 50, damping: 15 }}
+                    className="w-full md:w-[44%] p-8 rounded-3xl glass border border-slate-200/80 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 card-glow relative bg-[#FFFFFF] flex flex-col gap-4 cursor-pointer"
                   >
-                    <span className="text-xs text-primary font-bold uppercase tracking-wider block mb-1">{step.subtitle}</span>
-                    <h3 className="text-xl font-bold text-white mb-4">{step.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-text leading-relaxed">{step.desc}</p>
-                    
-                    {/* Corner Number */}
-                    <span className="absolute top-6 right-8 text-5xl font-black text-white/[0.02] tracking-tighter">
-                      {step.num}
-                    </span>
+                    <div className="flex justify-between items-start">
+                      <div className="flex flex-col">
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${step.color}`}>{step.subtitle}</span>
+                        <h3 className="text-xl font-bold text-slate-900 mt-1">{step.title}</h3>
+                      </div>
+                      <span className="text-4xl font-black text-slate-200/60 font-mono tracking-tighter shrink-0">
+                        {step.num}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-normal">{step.desc}</p>
                   </motion.div>
 
                   {/* Timeline Badge (Desktop) */}
@@ -97,14 +105,14 @@ export const HowItWorks = () => {
                       whileInView={{ scale: 1, opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ type: 'spring', stiffness: 100, delay: 0.15 }}
-                      className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${step.color} flex items-center justify-center shadow-lg ${step.shadow} border border-white/20`}
+                      className={`w-14 h-14 rounded-2xl bg-[#FFFFFF] border-2 border-slate-200 flex items-center justify-center shadow-md hover:border-primary/50 transition-colors`}
                     >
-                      <step.icon className="w-5 h-5 text-white" />
+                      <Icon className={`w-5 h-5 ${step.color}`} />
                     </motion.div>
                   </div>
 
                   {/* Spacer for structure */}
-                  <div className="w-full md:w-[45%] hidden md:block" />
+                  <div className="w-full md:w-[44%] hidden md:block" />
                 </div>
               );
             })}
@@ -114,4 +122,5 @@ export const HowItWorks = () => {
     </section>
   );
 };
+
 export default HowItWorks;

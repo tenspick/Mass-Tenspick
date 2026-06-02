@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/sections/Navbar';
 import Hero from './components/sections/Hero';
 import Trust from './components/sections/Trust';
@@ -12,6 +14,7 @@ import CaseStudies from './components/sections/CaseStudies';
 import Faq from './components/sections/Faq';
 import Contact from './components/sections/Contact';
 import Footer from './components/sections/Footer';
+import WhyChooseTenspick from './components/sections/WhyChooseTenspick';
 import GooeyText from './components/ui/GooeyText';
 import WhyMaasPage from './pages/WhyMaasPage';
 import ServicesPage from './pages/ServicesPage';
@@ -20,6 +23,8 @@ import IndustriesPage from './pages/IndustriesPage';
 import CaseStudiesPage from './pages/CaseStudiesPage';
 import FaqPage from './pages/FaqPage';
 import ContactPage from './pages/ContactPage';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -44,6 +49,25 @@ function App() {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' as any });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      ScrollTrigger.refresh();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [currentHash]);
+
+  useEffect(() => {
+    if (!showIntro) {
+      const timer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 950);
+      return () => clearTimeout(timer);
+    }
+  }, [showIntro]);
 
   // Skip preloader on mouse clicks, mouse scrolls, touch events, or keystrokes
   useEffect(() => {
@@ -90,6 +114,7 @@ function App() {
             <Hero />
             <Trust />
             <WhyMaas />
+            <WhyChooseTenspick />
             <Services />
             <HowItWorks />
             <BusinessTypes />

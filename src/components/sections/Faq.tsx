@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, HelpCircle } from 'lucide-react';
 
 export const Faq = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -33,15 +33,15 @@ export const Faq = () => {
   };
 
   return (
-    <section id="faq" className="py-24 relative bg-[#050505] overflow-hidden">
+    <section id="faq" className="py-24 relative bg-[#FFFFFF] overflow-hidden border-t border-slate-200">
       <div className="absolute bottom-[10%] right-[-15%] w-[40vw] h-[40vw] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-6 md:px-12">
         {/* Header */}
         <div className="text-center flex flex-col gap-3 mb-16">
-          <span className="text-xs font-bold tracking-widest text-accent uppercase">Got Questions?</span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white">Frequently Asked Questions</h2>
-          <p className="text-muted-text text-sm sm:text-base max-w-xl mx-auto">
+          <span className="text-xs font-bold tracking-widest text-primary uppercase">Got Questions?</span>
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900">Frequently Asked Questions</h2>
+          <p className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto">
             Everything you need to know about our subscription marketing model.
           </p>
         </div>
@@ -53,22 +53,23 @@ export const Faq = () => {
             return (
               <div 
                 key={idx}
-                className="rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.02] transition-colors overflow-hidden"
+                className="rounded-2xl border border-slate-200 bg-[#FFFFFF] hover:bg-slate-50/50 transition-colors overflow-hidden"
               >
                 {/* Trigger */}
                 <button
                   onClick={() => toggleFaq(idx)}
                   className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer focus:outline-none"
                 >
-                  <span className="text-sm sm:text-base font-bold text-white pr-4">
+                  <span className="text-sm sm:text-base font-bold text-slate-800 pr-4 flex items-center gap-3">
+                    <HelpCircle className="w-5 h-5 text-primary shrink-0" />
                     {faq.q}
                   </span>
                   <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
-                    className="p-1 rounded-full bg-white/5 border border-white/5 text-muted-text shrink-0"
+                    className="p-1 rounded-full bg-slate-50 border border-slate-200 text-slate-500 shrink-0"
                   >
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="w-4.5 h-4.5" />
                   </motion.div>
                 </button>
 
@@ -82,7 +83,7 @@ export const Faq = () => {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-muted-text leading-relaxed border-t border-white/[0.03]">
+                      <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-500 leading-relaxed border-t border-slate-100">
                         {faq.a}
                       </div>
                     </motion.div>
@@ -96,4 +97,5 @@ export const Faq = () => {
     </section>
   );
 };
+
 export default Faq;

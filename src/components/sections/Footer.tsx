@@ -6,14 +6,14 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#FFFFFF] text-[#0F172A] pt-24 pb-12 border-t border-slate-200 relative overflow-hidden">
+    <footer className="bg-[#0B192C] pt-20 pb-12 border-t border-slate-800 relative overflow-hidden" style={{ backgroundColor: '#0B192C' }}>
       {/* Background radial accent */}
-      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full bg-primary/5 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full bg-primary/10 blur-[100px] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 flex flex-col">
         
         {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-16 border-b border-slate-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-16 border-b border-slate-800">
           
           {/* Brand & Description (5 Columns) */}
           <div className="lg:col-span-5 flex flex-col gap-6">
@@ -26,12 +26,12 @@ export const Footer = () => {
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <span className="font-sans font-black tracking-tight text-lg text-[#1E3A8A] select-none">
+              <span className="font-sans font-black tracking-tight text-lg text-white-pure select-none">
                 TENSPICK MAAS
               </span>
             </a>
             
-            <p className="text-xs text-slate-500 leading-relaxed max-w-md">
+            <p className="text-xs text-slate-300-pure leading-relaxed max-w-md">
               Your complete, on-demand marketing department under one simple monthly subscription. We assemble strategists, designers, copywriters, developers, and media buyers to scale your business while you focus on building.
             </p>
 
@@ -49,10 +49,10 @@ export const Footer = () => {
                   href={social.href} 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="w-8 h-8 rounded-full bg-slate-50 border border-slate-200 text-slate-500 hover:text-primary hover:bg-primary/5 hover:border-primary/20 transition-all flex items-center justify-center cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-slate-800/50 border border-slate-700 text-slate-300 hover:text-white-pure hover:bg-primary/20 hover:border-primary/50 transition-all flex items-center justify-center cursor-pointer"
                   title={social.label}
                 >
-                  <social.icon className="w-4 h-4" />
+                  <social.icon className="w-4 h-4 text-slate-300-pure" />
                 </a>
               ))}
             </div>
@@ -60,7 +60,7 @@ export const Footer = () => {
 
           {/* Directory Link Column 1 (3 Columns) - Marketing Capabilities */}
           <div className="lg:col-span-3 flex flex-col gap-4">
-            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-900">Marketing Services</h4>
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-200-pure">Marketing Services</h4>
             <div className="flex flex-col gap-2.5">
               {[
                 { name: 'Search Engine Optimization', href: '#/services' },
@@ -73,7 +73,7 @@ export const Footer = () => {
                 <a 
                   key={link.name} 
                   href={link.href} 
-                  className="text-xs text-slate-500 hover:text-primary hover:translate-x-0.5 transition-all w-fit"
+                  className="text-xs text-slate-400-pure hover:text-white-pure hover:translate-x-0.5 transition-all w-fit"
                 >
                   {link.name}
                 </a>
@@ -83,7 +83,7 @@ export const Footer = () => {
 
           {/* Directory Link Column 2 (2 Columns) - Sitemap */}
           <div className="lg:col-span-2 flex flex-col gap-4">
-            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-900">Sitemap</h4>
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-200-pure">Sitemap</h4>
             <div className="flex flex-col gap-2.5">
               {[
                 { name: 'Why MaaS Model', href: '#/why-maas' },
@@ -95,7 +95,7 @@ export const Footer = () => {
                 <a 
                   key={link.name} 
                   href={link.href} 
-                  className="text-xs text-slate-500 hover:text-primary hover:translate-x-0.5 transition-all w-fit"
+                  className="text-xs text-slate-400-pure hover:text-white-pure hover:translate-x-0.5 transition-all w-fit"
                 >
                   {link.name}
                 </a>
@@ -105,56 +105,69 @@ export const Footer = () => {
 
           {/* Directory Link Column 3 (2 Columns) - Contacts HQ */}
           <div className="lg:col-span-2 flex flex-col gap-4">
-            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-900">Get in Touch</h4>
-            <div className="flex flex-col gap-2.5 text-xs text-slate-500">
-              <a href="mailto:contact@tenspick.com" className="hover:text-primary transition-colors">contact@tenspick.com</a>
-              <a href="tel:7330863893" className="hover:text-primary transition-colors">+91 7330863893</a>
-              <a href="#/contact" className="text-primary font-bold hover:underline">Book Strategy Call</a>
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-200-pure">Get in Touch</h4>
+            <div className="flex flex-col gap-2.5 text-xs text-slate-400-pure">
+              <a href="mailto:contact@tenspick.com" className="hover:text-white-pure transition-colors">contact@tenspick.com</a>
+              <a href="tel:7330863893" className="hover:text-white-pure transition-colors">+91 7330863893</a>
+              <a 
+                href="#/contact" 
+                className="text-accent-pure font-bold hover:underline"
+              >
+                Book Strategy Call
+              </a>
             </div>
           </div>
 
         </div>
 
         {/* Global Hubs Block (Row below Main Grid) */}
-        <div className="py-8 border-b border-slate-200/60 grid grid-cols-1 md:grid-cols-3 gap-8 text-xs text-slate-500">
+        <div className="py-8 border-b border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-8 text-xs text-slate-400-pure">
           <div className="flex items-start gap-3">
-            <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+            <MapPin className="w-5 h-5 text-accent-pure shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold text-slate-800 block mb-0.5">India (HQ)</span>
+              <span className="font-bold text-slate-200-pure block mb-0.5">India (HQ)</span>
               <span>Pullampeta, Andhra Pradesh</span>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <MapPin className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold text-slate-800 block mb-0.5">Kuwait</span>
+              <span className="font-bold text-slate-200-pure block mb-0.5">Kuwait</span>
               <span>In collaboration with Spark Groups</span>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <MapPin className="w-5 h-5 text-[#EAB308] shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold text-slate-800 block mb-0.5">Global Expansion</span>
+              <span className="font-bold text-slate-200-pure block mb-0.5">Global Expansion</span>
               <span>Expanding to Germany, Australia</span>
             </div>
           </div>
         </div>
 
         {/* Bottom footer row */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div className="flex items-center gap-1.5 font-medium">
-            <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
-            <span>powered and crafted with ❤️ by <a href="https://www.tenspick.com" target="_blank" rel="noreferrer" className="text-slate-800 hover:text-primary font-semibold transition-colors">tenspick</a></span>
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400-pure">
+          <div className="flex flex-wrap items-center gap-2 font-medium">
+            <ShieldCheck className="w-4 h-4 text-accent-pure shrink-0" />
+            <span>© 2026 Tenspick.</span>
+            <span>•</span>
+            <span>
+              <a href="https://maas.tenspick.com" target="_blank" rel="noreferrer" className="text-slate-200-pure hover:text-white-pure font-semibold transition-colors">MaaS TENSPICK</a>
+            </span>
+            <span>|</span>
+            <span>
+              <a href="https://www.csedge.co" target="_blank" rel="noreferrer" className="text-slate-200-pure hover:text-white-pure font-semibold transition-colors">Associated with CSEdge</a>
+            </span>
           </div>
 
           <div className="flex items-center gap-4 flex-wrap">
-            <a href="#/privacy" className="hover:text-primary transition-colors">Privacy Policy</a>
+            <a href="#/privacy" className="hover:text-white-pure transition-colors">Privacy Policy</a>
             <span>•</span>
-            <a href="#/terms" className="hover:text-primary transition-colors">Terms of Service</a>
+            <a href="#/terms" className="hover:text-white-pure transition-colors">Terms of Service</a>
             <span>•</span>
             <button 
               onClick={handleScrollToTop}
-              className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 hover:bg-primary/5 hover:text-primary transition-all flex items-center justify-center cursor-pointer"
+              className="p-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:bg-primary/20 hover:text-white-pure transition-all flex items-center justify-center cursor-pointer"
               title="Scroll to Top"
             >
               <ArrowUp className="w-3.5 h-3.5" />
@@ -163,7 +176,7 @@ export const Footer = () => {
         </div>
 
         {/* Tiny clean disclaimer */}
-        <div className="pt-4 text-center sm:text-left text-[10px] text-slate-400">
+        <div className="pt-4 text-center sm:text-left text-[10px] text-slate-500">
           Disclaimer: TENSPICK MAAS is an on-demand service by Tenspick. Subscribed websites, branding kits, ad campaign creatives, and workflow code pipelines remain the intellectual property of clients. GDPR compliant.
         </div>
 

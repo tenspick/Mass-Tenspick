@@ -32,7 +32,13 @@ export default function PageHeader({ eyebrow, title, subtitle, right }: PageHead
           </p>
 
           <div className="flex flex-wrap gap-3 mt-2">
-            <Button variant="primary" size="sm" onClick={() => (window.location.hash = '#/contact')}>
+            <Button 
+              variant="primary" 
+              size="sm" 
+              onClick={() => {
+                window.location.hash = '#/contact';
+              }}
+            >
               Book a strategy call <ArrowUpRight className="w-4 h-4" />
             </Button>
             <a

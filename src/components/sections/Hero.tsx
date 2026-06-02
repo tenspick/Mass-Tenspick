@@ -68,7 +68,7 @@ export function Hero() {
 
             <div className="flex flex-col gap-4 max-w-4xl mx-auto">
               <h1 className="text-3xl sm:text-5xl md:text-7xl tracking-tight text-center font-extrabold text-white leading-tight max-w-5xl mx-auto flex flex-col gap-2">
-                <span>From First Click To Lasting Success.</span>
+                <span style={{ color: '#1E3A8A' }}>From First Click To Lasting Success.</span>
                 <span className="block text-xl sm:text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-950 via-slate-800 to-primary mt-2">
                   You Build The Business. We Build The Momentum.
                 </span>
@@ -107,20 +107,24 @@ export function Hero() {
                 variant="primary" 
                 size="lg"
                 className="gap-2 shadow-primary/20"
-                onClick={() => window.location.hash = '#/contact'}
+                onClick={() => {
+                  window.location.hash = '#/contact';
+                }}
               >
                 Start Growing <MoveRight className="w-4 h-4" />
               </Button>
               <Button 
                 variant="secondary" 
                 size="lg"
-                className="gap-2 bg-white/5 border border-white/10 hover:bg-white/10"
-                onClick={() => window.location.hash = '#/contact'}
+                className="gap-2 btn-book-call"
+                onClick={() => {
+                  window.location.hash = '#/contact';
+                }}
               >
                 Book Call <PhoneCall className="w-4 h-4" />
               </Button>
             </div>
-          </div>
+           </div>
         }
       >
         {/* Mock Analytics Dashboard Content Inside the 3D scroll Card */}
