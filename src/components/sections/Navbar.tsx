@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import { Menu, X, ArrowUpRight, ShieldCheck } from 'lucide-react';
 
 export const Navbar = () => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, Building, CheckCircle2, ArrowRight, Loader2, Calendar } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import confetti from 'canvas-confetti';
 
 export const Contact = () => {

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { MoveRight, PhoneCall, Calendar, Play, Volume2, VolumeX, Layers, TrendingUp, Users, Target, Activity } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../ui/Button";
 import { ContainerScroll } from "../ui/ContainerScroll";
 
 // We import ContainerScroll as export const ContainerScroll, so we can reference it.

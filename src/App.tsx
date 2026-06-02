@@ -13,6 +13,13 @@ import Faq from './components/sections/Faq';
 import Contact from './components/sections/Contact';
 import Footer from './components/sections/Footer';
 import GooeyText from './components/ui/GooeyText';
+import WhyMaasPage from './pages/WhyMaasPage';
+import ServicesPage from './pages/ServicesPage';
+import HowItWorksPage from './pages/HowItWorksPage';
+import IndustriesPage from './pages/IndustriesPage';
+import CaseStudiesPage from './pages/CaseStudiesPage';
+import FaqPage from './pages/FaqPage';
+import ContactPage from './pages/ContactPage';
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -63,48 +70,20 @@ function App() {
   const renderPage = () => {
     switch (currentHash) {
       case '#/why-maas':
-        return (
-          <div className="pt-20">
-            <WhyMaas />
-          </div>
-        );
+        return <WhyMaasPage />;
       case '#/services':
-        return (
-          <div className="pt-20">
-            <Services />
-          </div>
-        );
+        return <ServicesPage />;
       case '#/how-it-works':
-        return (
-          <div className="pt-20">
-            <HowItWorks />
-          </div>
-        );
+        return <HowItWorksPage />;
       case '#/industries':
-        return (
-          <div className="pt-20">
-            <BusinessTypes />
-          </div>
-        );
+        return <IndustriesPage />;
       case '#/case-studies':
-        return (
-          <div className="pt-20">
-            <CaseStudies />
-          </div>
-        );
+        return <CaseStudiesPage />;
 
       case '#/faq':
-        return (
-          <div className="pt-20">
-            <Faq />
-          </div>
-        );
+        return <FaqPage />;
       case '#/contact':
-        return (
-          <div className="pt-20">
-            <Contact />
-          </div>
-        );
+        return <ContactPage />;
       default:
         return (
           <>
