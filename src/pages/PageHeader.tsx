@@ -43,7 +43,7 @@ export default function PageHeader({ eyebrow, title, subtitle, right }: PageHead
             </Button>
             <a
               href="#/"
-              className="text-sm text-slate-200/80 hover:text-white transition-colors underline underline-offset-4"
+              className="text-sm text-secondary hover:text-[#00D4FF] font-semibold transition-colors underline underline-offset-4"
             >
               Back to home
             </a>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark bg-dark-bg text-text-light">
+<html lang="en" class="bg-dark-bg text-text-light">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/tenspick maas logo.png" />
@@ -21,8 +21,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-[#050505] antialiased">
+  <body class="bg-white antialiased">
     <div id="root"></div>
+    <noscript>
+      <p style="padding:2rem;font-family:system-ui,sans-serif;color:#0F172A;">
+        JavaScript is required. Run <strong>npm run dev</strong> and open
+        <a href="http://localhost:5173/">http://localhost:5173/</a> — do not open this file directly.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          var root = document.getElementById('root');
+          if (root && !root.hasChildNodes()) {
+            root.innerHTML =
+              '<div style="padding:2rem;max-width:32rem;font-family:system-ui,sans-serif;color:#0F172A;line-height:1.6">' +
+              '<h1 style="font-size:1.125rem;font-weight:700;margin:0 0 0.75rem">App did not load</h1>' +
+              '<p style="margin:0 0 0.75rem;color:#475569">This project must be served by Vite. From the project folder run:</p>' +
+              '<pre style="background:#F1F5F9;padding:0.75rem;border-radius:0.5rem;font-size:0.875rem;margin:0 0 0.75rem">npm run dev</pre>' +
+              '<p style="margin:0;color:#475569">Then open <a href="http://localhost:5173/" style="color:#2563EB">http://localhost:5173/</a>. Opening <code>index.html</code> directly will show a blank page.</p>' +
+              '</div>';
+          }
+        }, 2500);
+      });
+    </script>
   </body>
 </html>

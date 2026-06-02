@@ -29,12 +29,14 @@ export function GooeyText({
 
     const setMorph = (fraction: number) => {
       if (text1Ref.current && text2Ref.current) {
-        text2Ref.current.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        const f1 = Math.min(Math.max(fraction, 0.001), 1);
+        const f2 = Math.min(Math.max(1 - fraction, 0.001), 1);
 
-        fraction = 1 - fraction;
-        text1Ref.current.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        text2Ref.current.style.filter = `blur(${Math.min(8 / f1 - 8, 100)}px)`;
+        text2Ref.current.style.opacity = `${Math.pow(f1, 0.4) * 100}%`;
+
+        text1Ref.current.style.filter = `blur(${Math.min(8 / f2 - 8, 100)}px)`;
+        text1Ref.current.style.opacity = `${Math.pow(f2, 0.4) * 100}%`;
       }
     };
 
@@ -142,10 +144,12 @@ export function GooeyText({
         <span
           ref={text1Ref}
           className={`absolute inline-block select-none text-center text-4xl sm:text-6xl md:text-8xl font-black ${textClassName}`}
+          style={{ opacity: 0 }}
         />
         <span
           ref={text2Ref}
           className={`absolute inline-block select-none text-center text-4xl sm:text-6xl md:text-8xl font-black ${textClassName}`}
+          style={{ opacity: 1 }}
         />
       </div>
     </div>

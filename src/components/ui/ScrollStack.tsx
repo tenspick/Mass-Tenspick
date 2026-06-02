@@ -37,7 +37,7 @@ export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({
 }) => {
   return (
     <div 
-      className={`scroll-stack-item absolute inset-0 w-full h-full flex flex-col justify-between p-8 md:p-16 overflow-hidden select-none ${className}`}
+      className={`scroll-stack-item lg:absolute lg:inset-0 w-full h-full lg:h-full flex flex-col justify-between p-8 md:p-16 overflow-hidden select-none ${className}`}
       style={style}
     >
       {/* Background Layer (Solid, Gradient, Image, or Video) */}
@@ -51,10 +51,10 @@ export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({
       <div className="absolute inset-0 bg-slate-950/20 backdrop-blur-[1px] z-1 pointer-events-none" />
 
       {/* Content Layer (Flex column occupying full screen) */}
-      <div className="relative z-10 w-full h-full flex flex-col justify-between flex-grow">
+      <div className="relative z-10 w-full h-full flex flex-col justify-between flex-grow gap-6">
         
         {/* Top Row: Step and Category */}
-        <div className="flex justify-between items-center text-xs font-mono font-bold tracking-widest text-white-pure/60">
+        <div className="flex justify-between items-center text-[10px] sm:text-xs font-mono font-bold tracking-widest text-white-pure/60">
           <span>{stepCounter || (cardIndex !== undefined ? `0${cardIndex + 1} // CAPABILITY` : '')}</span>
           <span>{categoryLabel || 'TENSPICK MAAS'}</span>
         </div>
@@ -79,7 +79,7 @@ export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({
         </div>
 
         {/* Bottom Row: Interaction Action and Slide Progress Number */}
-        <div className="flex justify-between items-end text-xs font-mono font-bold tracking-widest text-white-pure/60 mt-4">
+        <div className="flex justify-between items-end text-[10px] sm:text-xs font-mono font-bold tracking-widest text-white-pure/60 mt-auto">
           <div>
             {interactionElement || <span className="text-accent-pure font-black font-sans uppercase">MaaS Presentation</span>}
           </div>
@@ -110,11 +110,25 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
   const stickyRef = useRef<HTMLDivElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 1024
+  );
 
   const childrenArray = React.Children.toArray(children);
   const totalCards = childrenArray.length;
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+
     if (!wrapperRef.current || !stickyRef.current || !cardsContainerRef.current) return;
 
     const cards = Array.from(cardsContainerRef.current.children) as HTMLElement[];
@@ -150,7 +164,7 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
           trigger: wrapperRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.8,
+          scrub: 0.2,
           pin: stickyRef.current,
           pinSpacing: true,
           anticipatePin: 1,
@@ -167,8 +181,6 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
       });
 
       // Build transition sequence
-      // Exit: opacity: 1->0, scale: 1->0.95, y: 0->-100px, blur: 0->10px
-      // Entry: opacity: 0->1, scale: 1.05->1, y: 100px->0, blur: 10px->0
       for (let i = 0; i < cards.length - 1; i++) {
         const outgoing = cards[i];
         const incoming = cards[i + 1];
@@ -181,7 +193,7 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
           filter: "blur(10px)",
           pointerEvents: "none",
           duration: duration,
-          ease: "none" // Linear scrub response
+          ease: "none"
         }, startTime)
         .to(incoming, {
           opacity: 1,
@@ -197,14 +209,42 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
 
     return () => {
       ctx.revert();
+      ScrollTrigger.refresh();
     };
-  }, [totalCards]);
+  }, [totalCards, isMobile]);
+
+  if (isMobile) {
+    return (
+      <div 
+        className={`w-full py-16 flex flex-col gap-6 bg-slate-950 ${className}`} 
+        style={{ backgroundColor: '#030712' }}
+      >
+        {childrenArray.map((child, idx) => {
+          if (React.isValidElement(child)) {
+            return (
+              <div 
+                key={idx}
+                className="w-[90%] max-w-lg mx-auto min-h-[480px] relative rounded-3xl overflow-hidden border border-white/10 shadow-xl bg-slate-900/20"
+              >
+                {React.cloneElement(child as React.ReactElement<any>, {
+                  cardIndex: idx,
+                  totalCards: totalCards,
+                  isActive: true
+                })}
+              </div>
+            );
+          }
+          return child;
+        })}
+      </div>
+    );
+  }
 
   return (
     <div 
       ref={wrapperRef} 
       className={`scroll-stack-wrapper relative w-full ${className}`}
-      style={{ height: `${totalCards * 140}vh` }} // Comfortable luxury scroll height
+      style={{ height: `${totalCards * 140}vh` }}
     >
       <div 
         ref={stickyRef} 

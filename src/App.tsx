@@ -27,7 +27,7 @@ import ContactPage from './pages/ContactPage';
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
 
   const introTexts = [

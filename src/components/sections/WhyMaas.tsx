@@ -1,6 +1,6 @@
 import React from 'react';
 import ScrollStack, { ScrollStackItem } from '../ui/ScrollStack';
-import { X, Check, Users, Activity, Coins, Layers } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 
 export const WhyMaas = () => {
   const cards = [
@@ -91,5 +91,4 @@ export const WhyMaas = () => {
     </ScrollStack>
   );
 };
-
 export default WhyMaas;

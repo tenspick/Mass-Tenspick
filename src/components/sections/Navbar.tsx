@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
-import { Menu, X, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,16 +23,20 @@ export const Navbar = () => {
     { name: 'FAQ', href: '#/faq' },
   ];
 
-  const isMobileBlue = isScrolled || isOpen;
+  const isDesktopTop = !isScrolled && !isOpen;
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'py-4 bg-[#1E3A8A] lg:bg-[#FFFFFF]/90 lg:backdrop-blur-md border-b border-white/10 lg:border-slate-200' 
-        : isOpen
-          ? 'py-6 bg-[#1E3A8A] border-b border-white/10'
-          : 'py-6 bg-transparent'
-    }`}>
+    <nav
+      className={`site-navbar fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        isDesktopTop ? 'navbar--top' : ''
+      } ${
+        isScrolled
+          ? 'py-4 bg-[#1E3A8A] lg:bg-[#FFFFFF]/90 lg:backdrop-blur-md border-b border-white/10 lg:border-slate-200'
+          : isOpen
+            ? 'py-6 bg-[#1E3A8A] border-b border-white/10'
+            : 'py-6 bg-[#1E3A8A] lg:bg-transparent border-b border-white/10 lg:border-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         {/* Logo */}
         <a href="#/" className="flex items-center gap-2.5 group">
@@ -44,9 +48,7 @@ export const Navbar = () => {
               e.currentTarget.style.display = 'none';
             }}
           />
-          <span className={`font-sans font-black tracking-tight text-lg sm:text-xl select-none transition-colors duration-300 ${
-            isMobileBlue ? 'text-white-pure lg:text-[#1E3A8A]' : 'text-[#1E3A8A]'
-          }`}>
+          <span className="navbar-brand-text font-sans font-black tracking-tight text-lg sm:text-xl select-none transition-colors duration-300 text-white-pure lg:text-[#1E3A8A]">
             TENSPICK MAAS
           </span>
         </a>
@@ -88,19 +90,15 @@ export const Navbar = () => {
           <a 
             href="#/contact" 
             onClick={() => setIsOpen(false)}
-            className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all duration-300 ${
-              isMobileBlue 
-                ? 'text-white-pure border-white/20 hover:bg-white/10' 
-                : 'text-[#1E3A8A] border-[#1E3A8A]/20 hover:bg-[#1E3A8A]/5'
-            }`}
+            className="navbar-mobile-cta text-xs font-bold px-3 py-1.5 rounded-full border transition-all duration-300 text-white-pure border-white/20 hover:bg-white/10"
           >
             Book Call
           </a>
           <button 
+            type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className={`p-2 transition-colors cursor-pointer ${
-              isMobileBlue ? 'text-white-pure' : 'text-[#1E3A8A] hover:text-primary'
-            }`}
+            className="p-2 transition-colors text-white-pure nav-menu-toggle"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>

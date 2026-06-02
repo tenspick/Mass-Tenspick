@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, CheckCircle2 } from 'lucide-react';
+import { ChevronDown, CheckCircle2, HelpCircle } from 'lucide-react';
 import PageHeader from './PageHeader';
 
 export default function FaqPage() {
@@ -164,17 +164,32 @@ export default function FaqPage() {
                     return (
                       <div
                         key={faq.q}
-                        className="rounded-2xl border border-slate-200 bg-white hover:bg-slate-50/50 transition-colors overflow-hidden shadow-xs"
+                        className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                          isOpen 
+                            ? 'border-primary/40 bg-gradient-to-br from-primary/[0.02] to-secondary/[0.01] shadow-md shadow-primary/5' 
+                            : 'border-slate-200 bg-white hover:bg-slate-50/50 hover:border-slate-300 shadow-xs'
+                        }`}
                       >
                         <button
                           onClick={() => setActiveIndex(isOpen ? null : globalIdx)}
-                          className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer focus:outline-none"
+                          className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer focus:outline-none group"
                         >
-                          <span className="text-xs sm:text-sm font-extrabold text-slate-850 pr-4">{faq.q}</span>
+                          <span className={`text-sm sm:text-base font-bold pr-4 flex items-center gap-3 transition-colors duration-300 ${
+                            isOpen ? 'text-primary' : 'text-slate-900 group-hover:text-primary/95'
+                          }`}>
+                            <HelpCircle className={`w-5 h-5 shrink-0 transition-colors duration-300 ${
+                              isOpen ? 'text-primary' : 'text-slate-400 group-hover:text-primary/80'
+                            }`} />
+                            {faq.q}
+                          </span>
                           <motion.div
                             animate={{ rotate: isOpen ? 180 : 0 }}
                             transition={{ duration: 0.25 }}
-                            className="p-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 shrink-0"
+                            className={`p-1.5 rounded-full border transition-colors duration-300 shrink-0 ${
+                              isOpen 
+                                ? 'bg-primary/10 border-primary/20 text-primary' 
+                                : 'bg-slate-50 border-slate-200 text-slate-500 group-hover:bg-slate-100 group-hover:border-slate-300 group-hover:text-slate-700'
+                            }`}
                           >
                             <ChevronDown className="w-4 h-4" />
                           </motion.div>
@@ -189,7 +204,7 @@ export default function FaqPage() {
                               transition={{ duration: 0.25, ease: 'easeInOut' }}
                               className="overflow-hidden"
                             >
-                              <div className="px-6 pb-6 pt-1 text-xs text-slate-500 leading-relaxed border-t border-slate-100 font-medium">
+                              <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-100 font-medium max-w-3xl">
                                 {faq.a}
                               </div>
                             </motion.div>

@@ -53,21 +53,33 @@ export const Faq = () => {
             return (
               <div 
                 key={idx}
-                className="rounded-2xl border border-slate-200 bg-[#FFFFFF] hover:bg-slate-50/50 transition-colors overflow-hidden"
+                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                  isOpen 
+                    ? 'border-primary/40 bg-gradient-to-br from-primary/[0.02] to-secondary/[0.01] shadow-md shadow-primary/5' 
+                    : 'border-slate-200 bg-white hover:bg-slate-50/50 hover:border-slate-300 shadow-xs'
+                }`}
               >
                 {/* Trigger */}
                 <button
                   onClick={() => toggleFaq(idx)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer focus:outline-none"
+                  className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer focus:outline-none group"
                 >
-                  <span className="text-sm sm:text-base font-bold text-slate-800 pr-4 flex items-center gap-3">
-                    <HelpCircle className="w-5 h-5 text-primary shrink-0" />
+                  <span className={`text-sm sm:text-base md:text-lg font-bold pr-4 flex items-center gap-3 transition-colors duration-300 ${
+                    isOpen ? 'text-primary' : 'text-slate-900 group-hover:text-primary/95'
+                  }`}>
+                    <HelpCircle className={`w-5 h-5 shrink-0 transition-colors duration-300 ${
+                      isOpen ? 'text-primary' : 'text-slate-400 group-hover:text-primary/80'
+                    }`} />
                     {faq.q}
                   </span>
                   <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="p-1 rounded-full bg-slate-50 border border-slate-200 text-slate-500 shrink-0"
+                    transition={{ duration: 0.25 }}
+                    className={`p-1.5 rounded-full border transition-colors duration-300 shrink-0 ${
+                      isOpen 
+                        ? 'bg-primary/10 border-primary/20 text-primary' 
+                        : 'bg-slate-50 border-slate-200 text-slate-500 group-hover:bg-slate-100 group-hover:border-slate-300 group-hover:text-slate-700'
+                    }`}
                   >
                     <ChevronDown className="w-4.5 h-4.5" />
                   </motion.div>
@@ -80,10 +92,10 @@ export const Faq = () => {
                       initial={{ height: 0 }}
                       animate={{ height: 'auto' }}
                       exit={{ height: 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-500 leading-relaxed border-t border-slate-100">
+                      <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-100 font-medium max-w-3xl">
                         {faq.a}
                       </div>
                     </motion.div>
