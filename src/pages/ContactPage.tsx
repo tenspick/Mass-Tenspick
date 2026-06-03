@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import PageHeader from './PageHeader';
 import confetti from 'canvas-confetti';
+import { emailService } from '../services/emailService';
 
 export default function ContactPage() {
   const [form, setForm] = useState({
@@ -94,7 +95,7 @@ export default function ContactPage() {
   const isPhoneValid = form.phone.trim().length === 0 || form.phone.trim().length >= 8;
   const isMessageValid = form.message.trim().length > 0;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isFirstNameValid || !isLastNameValid || !isEmailValid || !isMessageValid) {
@@ -104,27 +105,33 @@ export default function ContactPage() {
 
     setLoading(true);
 
-    const mailtoEmail = 'tenspickofficial@gmail.com';
-    const subject = `TENSPICK Inquiry from ${form.firstName} ${form.lastName}`;
-    const body = `First Name: ${form.firstName}\nLast Name: ${form.lastName}\nEmail: ${form.email}\nPhone: ${form.phone || 'Not Provided'}\nService: ${form.service}\n\nMessage:\n${form.message}`;
-
-    const mailtoUrl = `mailto:${mailtoEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
+    const response = await emailService.sendContactForm({
+      name: `${form.firstName} ${form.lastName}`,
+      email: form.email,
+      phone: form.phone,
+      service: form.service,
+      message: form.message,
+    });
 
     setLoading(false);
-    setSuccess(true);
 
-    // Launch Confetti
-    confetti({
-      particleCount: 150,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#2563EB', '#00D4FF', '#6C63FF', '#FFFFFF']
-    });
+    if (response.success) {
+      setSuccess(true);
+
+      // Launch Confetti
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#2563EB', '#00D4FF', '#6C63FF', '#FFFFFF']
+      });
+    } else {
+      alert(response.error || 'Failed to submit form. Please try again or use the backup option.');
+    }
   };
 
   const handleConsultationClick = () => {
-    const mailtoEmail = 'tenspickofficial@gmail.com';
+    const mailtoEmail = 'tenspickindia@gmail.com';
     const subject = 'Free Growth Consultation Request';
     const body = 'Hi Tenspick Team,\n\nI would like to book a free, no-obligation consultation to learn how Tenspick can fuel our growth.\n\nBest regards,';
     window.location.href = `mailto:${mailtoEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -292,20 +299,20 @@ export default function ContactPage() {
                     <CheckCircle className="w-8 h-8" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">Message Pre-filled Successfully</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">Message Sent Successfully</h3>
                     <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
-                      Your details have been passed to your email client. Please click **Send** to finalize submission.
+                      Your message has been sent successfully. We will get back to you within 24 hours!
                     </p>
                   </div>
 
                   {/* Backup copy box */}
                   <div className="w-full max-w-md bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-3">
                     <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block text-left">
-                      Backup Details (Send to tenspickofficial@gmail.com):
+                      Backup Details (Send to tenspickindia@gmail.com):
                     </span>
                     <textarea
                       readOnly
-                      value={`To: tenspickofficial@gmail.com\nSubject: TENSPICK Inquiry from ${form.firstName} ${form.lastName}\n\nFirst Name: ${form.firstName}\nLast Name: ${form.lastName}\nEmail: ${form.email}\nPhone: ${form.phone || 'Not Provided'}\nService: ${form.service}\n\nMessage:\n${form.message}`}
+                      value={`To: tenspickindia@gmail.com\nSubject: TENSPICK Inquiry from ${form.firstName} ${form.lastName}\n\nFirst Name: ${form.firstName}\nLast Name: ${form.lastName}\nEmail: ${form.email}\nPhone: ${form.phone || 'Not Provided'}\nService: ${form.service}\n\nMessage:\n${form.message}`}
                       className="w-full h-32 bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-650 font-mono focus:outline-none resize-none"
                     />
                     <button 

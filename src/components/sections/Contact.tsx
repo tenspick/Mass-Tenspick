@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, Phone, Building, CheckCircle2, ArrowRight, Loader2, Calendar } from 'lucide-react';
 import { Button } from '../ui/Button';
 import confetti from 'canvas-confetti';
+import { emailService } from '../../services/emailService';
 
 export const Contact = () => {
   const [form, setForm] = useState({
@@ -19,7 +20,7 @@ export const Contact = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim()) {
       alert('Please enter your name.');
@@ -36,23 +37,28 @@ export const Contact = () => {
 
     setLoading(true);
 
-    const subject = `TENSPICK MAAS Growth Request: ${form.name}`;
-    const body = `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCompany: ${form.company || 'Not Provided'}\n\nMessage:\n${form.message || 'No objective specified'}`;
-    
-    // Construct mailto url and trigger immediately to bypass popup/redirection blockers
-    const mailtoUrl = `mailto:tenspickofficial@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
+    const response = await emailService.sendContactForm({
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      company: form.company,
+      message: form.message,
+    });
 
     setLoading(false);
-    setSuccess(true);
-    
-    // Fire confetti explosion
-    confetti({
-      particleCount: 150,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#00D4FF', '#6C63FF', '#00FFB2', '#FFFFFF']
-    });
+
+    if (response.success) {
+      setSuccess(true);
+      // Fire confetti explosion
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#00D4FF', '#6C63FF', '#00FFB2', '#FFFFFF']
+      });
+    } else {
+      alert(response.error || 'Failed to send your details. Please try again or use the backup option.');
+    }
   };
 
   return (
@@ -109,7 +115,7 @@ export const Contact = () => {
               </div>
               <div>
                 <span className="text-[10px] text-muted-text uppercase block">Internal Admin Inbox</span>
-                <span className="text-sm font-bold text-white">tenspickofficial@gmail.com</span>
+                <span className="text-sm font-bold text-white">tenspickindia@gmail.com</span>
               </div>
             </div>
           </div>
@@ -131,20 +137,20 @@ export const Contact = () => {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                  <div>
-                  <h3 className="text-2xl font-bold text-white-pure mb-2">Growth Request Dispatched</h3>
+                  <h3 className="text-2xl font-bold text-white-pure mb-2">Growth Request Received</h3>
                   <p className="text-xs sm:text-sm text-slate-300-pure max-w-sm mx-auto leading-relaxed">
-                    Your details have been pre-filled into your mail client. Please click **Send** to finalize submission.
+                    Your details have been submitted successfully. We will review them and get back to you shortly!
                   </p>
                 </div>
 
                 {/* Backup copy box */}
                 <div className="w-full max-w-md bg-white/5 border border-white/5 rounded-2xl p-4 flex flex-col gap-3">
                   <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block text-left">
-                    Backup Details (Send to tenspickofficial@gmail.com):
+                    Backup Details (Send to tenspickindia@gmail.com):
                   </span>
                   <textarea
                     readOnly
-                    value={`To: tenspickofficial@gmail.com\nSubject: TENSPICK MAAS Growth Request: ${form.name}\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCompany: ${form.company || 'Not Provided'}\n\nMessage:\n${form.message || 'No objective specified'}`}
+                    value={`To: tenspickindia@gmail.com\nSubject: TENSPICK MAAS Growth Request: ${form.name}\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCompany: ${form.company || 'Not Provided'}\n\nMessage:\n${form.message || 'No objective specified'}`}
                     className="w-full h-32 bg-slate-950/80 border border-white/5 rounded-xl p-3 text-xs text-slate-300-pure font-mono focus:outline-none resize-none"
                   />
                   <Button 
