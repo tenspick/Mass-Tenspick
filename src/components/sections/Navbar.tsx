@@ -27,15 +27,7 @@ export const Navbar = () => {
 
   return (
     <nav
-      className={`site-navbar fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isDesktopTop ? 'navbar--top' : ''
-      } ${
-        isScrolled
-          ? 'py-4 bg-[#1E3A8A] lg:bg-[#FFFFFF]/90 lg:backdrop-blur-md border-b border-white/10 lg:border-slate-200'
-          : isOpen
-            ? 'py-6 bg-[#1E3A8A] border-b border-white/10'
-            : 'py-6 bg-[#1E3A8A] lg:bg-transparent border-b border-white/10 lg:border-transparent'
-      }`}
+      className="site-navbar fixed top-0 left-0 w-full z-50 transition-all duration-500 py-4 bg-[#1E3A8A] border-b border-white/10"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         {/* Logo */}
@@ -48,7 +40,7 @@ export const Navbar = () => {
               e.currentTarget.style.display = 'none';
             }}
           />
-          <span className="navbar-brand-text font-sans font-black tracking-tight text-lg sm:text-xl select-none transition-colors duration-300 text-white-pure lg:text-[#1E3A8A]">
+          <span className="navbar-brand-text font-sans font-black tracking-tight text-lg sm:text-xl select-none transition-colors duration-300 text-white-pure">
             TENSPICK MAAS
           </span>
         </a>
@@ -59,7 +51,7 @@ export const Navbar = () => {
             <a 
               key={link.name} 
               href={link.href} 
-              className="text-sm text-slate-600 hover:text-primary transition-colors duration-300"
+              className="text-sm text-slate-200 hover:text-white transition-colors duration-300"
             >
               {link.name}
             </a>
@@ -70,7 +62,7 @@ export const Navbar = () => {
         <div className="hidden lg:flex items-center gap-4">
           <a 
             href="#/contact" 
-            className="text-sm text-slate-600 hover:text-primary transition-colors duration-300 flex items-center gap-1"
+            className="text-sm text-slate-200 hover:text-white transition-colors duration-300 flex items-center gap-1"
           >
             Book Call <ArrowUpRight className="w-4 h-4" />
           </a>

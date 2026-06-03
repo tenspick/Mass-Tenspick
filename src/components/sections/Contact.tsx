@@ -21,38 +21,38 @@ export const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.phone) return;
+    if (!form.name.trim()) {
+      alert('Please enter your name.');
+      return;
+    }
+    if (!form.email.trim()) {
+      alert('Please enter your business email.');
+      return;
+    }
+    if (!form.phone.trim()) {
+      alert('Please enter your phone number.');
+      return;
+    }
 
     setLoading(true);
 
-    // Simulate database write / trigger mail client link
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
-      
-      // Fire confetti explosion
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 },
-        colors: ['#00D4FF', '#6C63FF', '#00FFB2', '#FFFFFF']
-      });
+    const subject = `TENSPICK MAAS Growth Request: ${form.name}`;
+    const body = `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCompany: ${form.company || 'Not Provided'}\n\nMessage:\n${form.message || 'No objective specified'}`;
+    
+    // Construct mailto url and trigger immediately to bypass popup/redirection blockers
+    const mailtoUrl = `mailto:tenspickofficial@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
 
-      // Construct mailto link as fallback to ensure they can send it directly
-      const subject = encodeURIComponent(`TENSPICK MAAS Growth Request: ${form.name}`);
-      const body = encodeURIComponent(
-        `Name: ${form.name}\n` +
-        `Email: ${form.email}\n` +
-        `Phone: ${form.phone}\n` +
-        `Company: ${form.company}\n\n` +
-        `Message:\n${form.message}`
-      );
-      
-      // Let's create an anchor and trigger it in background
-      const mailtoUrl = `mailto:tenspickofficial@gmail.com?subject=${subject}&body=${body}`;
-      window.location.href = mailtoUrl;
-
-    }, 1800);
+    setLoading(false);
+    setSuccess(true);
+    
+    // Fire confetti explosion
+    confetti({
+      particleCount: 150,
+      spread: 80,
+      origin: { y: 0.6 },
+      colors: ['#00D4FF', '#6C63FF', '#00FFB2', '#FFFFFF']
+    });
   };
 
   return (
@@ -125,21 +125,49 @@ export const Contact = () => {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="py-16 flex flex-col items-center justify-center text-center gap-6 relative z-10"
+                className="py-8 flex flex-col items-center justify-center text-center gap-6 relative z-10 text-white-pure"
               >
                 <div className="w-16 h-16 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Growth Request Dispatched</h3>
-                  <p className="text-xs sm:text-sm text-muted-text max-w-sm mx-auto">
-                    Your details have been pre-filled into your mail client. Please click send to finalize submission to **tenspickofficial@gmail.com**. Our strategists will reach out shortly!
+                 <div>
+                  <h3 className="text-2xl font-bold text-white-pure mb-2">Growth Request Dispatched</h3>
+                  <p className="text-xs sm:text-sm text-slate-300-pure max-w-sm mx-auto leading-relaxed">
+                    Your details have been pre-filled into your mail client. Please click **Send** to finalize submission.
                   </p>
                 </div>
+
+                {/* Backup copy box */}
+                <div className="w-full max-w-md bg-white/5 border border-white/5 rounded-2xl p-4 flex flex-col gap-3">
+                  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block text-left">
+                    Backup Details (Send to tenspickofficial@gmail.com):
+                  </span>
+                  <textarea
+                    readOnly
+                    value={`To: tenspickofficial@gmail.com\nSubject: TENSPICK MAAS Growth Request: ${form.name}\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCompany: ${form.company || 'Not Provided'}\n\nMessage:\n${form.message || 'No objective specified'}`}
+                    className="w-full h-32 bg-slate-950/80 border border-white/5 rounded-xl p-3 text-xs text-slate-300-pure font-mono focus:outline-none resize-none"
+                  />
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      const text = `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCompany: ${form.company || 'Not Provided'}\n\nMessage:\n${form.message || 'No objective specified'}`;
+                      navigator.clipboard.writeText(text);
+                      alert('Details copied to clipboard!');
+                    }}
+                    className="w-full text-xs py-2 bg-white/10"
+                  >
+                    Copy Details to Clipboard
+                  </Button>
+                </div>
+
                 <Button 
                   variant="outline" 
                   size="md"
-                  onClick={() => setSuccess(false)}
+                  onClick={() => {
+                    setSuccess(false);
+                    setForm({ name: '', email: '', phone: '', company: '', message: '' });
+                  }}
                 >
                   Send another inquiry
                 </Button>

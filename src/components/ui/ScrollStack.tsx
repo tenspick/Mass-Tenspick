@@ -109,7 +109,10 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
+  const wrapperMobileRef = useRef<HTMLDivElement>(null);
+  const stickyMobileRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [mobileScrollProgress, setMobileScrollProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== 'undefined' && window.innerWidth < 1024
   );
@@ -125,6 +128,28 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Track mobile scroll progress relative to the wrapper height
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const handleScroll = () => {
+      if (!wrapperMobileRef.current) return;
+      const rect = wrapperMobileRef.current.getBoundingClientRect();
+      const elementHeight = rect.height;
+      const viewportHeight = window.innerHeight;
+      
+      const scrolled = -rect.top;
+      const scrollable = elementHeight - viewportHeight;
+      const progress = Math.max(0, Math.min(1, scrolled / (scrollable || 1)));
+      setMobileScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial position check
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobile]);
 
   useEffect(() => {
     if (isMobile) return;
@@ -155,139 +180,206 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
       }
     });
 
-    const ctx = gsap.context(() => {
-      const duration = 1.0;
-      const gap = 0.6; // resting state for user reading
+    let ctx: gsap.Context;
+    const timer = setTimeout(() => {
+      ctx = gsap.context(() => {
+        const duration = 1.0;
+        const gap = 0.6; // resting state for user reading
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.2,
-          pin: stickyRef.current,
-          pinSpacing: true,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const segment = 1 / totalCards;
-            const currentIdx = Math.min(
-              Math.floor(progress / segment),
-              totalCards - 1
-            );
-            setActiveIndex(currentIdx);
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: wrapperRef.current,
+            start: "top top",
+            end: () => "+=" + (totalCards * window.innerHeight * 1.0),
+            scrub: 0.2,
+            pin: stickyRef.current,
+            pinSpacing: true,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+              const progress = self.progress;
+              const segment = 1 / totalCards;
+              const currentIdx = Math.min(
+                Math.floor(progress / segment),
+                totalCards - 1
+              );
+              setActiveIndex(currentIdx);
+            }
           }
+        });
+
+        // Build transition sequence
+        for (let i = 0; i < cards.length - 1; i++) {
+          const outgoing = cards[i];
+          const incoming = cards[i + 1];
+          const startTime = i * (duration + gap) + gap;
+
+          tl.to(outgoing, {
+            opacity: 0,
+            scale: 0.95,
+            y: -100,
+            filter: "blur(10px)",
+            pointerEvents: "none",
+            duration: duration,
+            ease: "none"
+          }, startTime)
+          .to(incoming, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            filter: "blur(0px)",
+            pointerEvents: "auto",
+            duration: duration,
+            ease: "none"
+          }, startTime);
         }
-      });
+      }, wrapperRef);
 
-      // Build transition sequence
-      for (let i = 0; i < cards.length - 1; i++) {
-        const outgoing = cards[i];
-        const incoming = cards[i + 1];
-        const startTime = i * (duration + gap) + gap;
-
-        tl.to(outgoing, {
-          opacity: 0,
-          scale: 0.95,
-          y: -100,
-          filter: "blur(10px)",
-          pointerEvents: "none",
-          duration: duration,
-          ease: "none"
-        }, startTime)
-        .to(incoming, {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          filter: "blur(0px)",
-          pointerEvents: "auto",
-          duration: duration,
-          ease: "none"
-        }, startTime);
-      }
-    }, wrapperRef);
+      ScrollTrigger.refresh();
+    }, 1000);
 
     return () => {
-      ctx.revert();
+      clearTimeout(timer);
+      if (ctx) ctx.revert();
       ScrollTrigger.refresh();
     };
   }, [totalCards, isMobile]);
 
-  if (isMobile) {
-    return (
-      <div 
-        className={`w-full py-16 flex flex-col gap-6 bg-slate-950 ${className}`} 
-        style={{ backgroundColor: '#030712' }}
-      >
-        {childrenArray.map((child, idx) => {
-          if (React.isValidElement(child)) {
-            return (
-              <div 
-                key={idx}
-                className="w-[90%] max-w-lg mx-auto min-h-[480px] relative rounded-3xl overflow-hidden border border-white/10 shadow-xl bg-slate-900/20"
-              >
-                {React.cloneElement(child as React.ReactElement<any>, {
-                  cardIndex: idx,
-                  totalCards: totalCards,
-                  isActive: true
-                })}
-              </div>
-            );
-          }
-          return child;
-        })}
-      </div>
-    );
-  }
+  // Compute transform and opacity offsets for each card in the mobile stack
+  const getCardTransform = (idx: number) => {
+    if (!isMobile) return {};
+    
+    const segment = 1 / totalCards;
+    const startFadeIn = (idx - 0.7) * segment;
+    const endFadeIn = idx * segment;
+    
+    let y = 350; // Initial slide-up position
+    let opacity = 0;
+    let scale = 0.94;
+    
+    if (mobileScrollProgress < startFadeIn) {
+      y = 350;
+      opacity = 0;
+      scale = 0.94;
+    } else if (mobileScrollProgress >= startFadeIn && mobileScrollProgress <= endFadeIn) {
+      const p = (mobileScrollProgress - startFadeIn) / (endFadeIn - startFadeIn);
+      y = 350 * (1 - p);
+      opacity = p;
+      scale = 0.94 + p * 0.06;
+    } else {
+      y = 0;
+      opacity = 1;
+      scale = 1;
+      
+      // Fade out and scale down card when a subsequent card stacks on top
+      const nextCardStart = (idx + 0.2) * segment;
+      const nextCardEnd = (idx + 0.8) * segment;
+      if (mobileScrollProgress > nextCardStart) {
+        const nextProgress = Math.min(1, (mobileScrollProgress - nextCardStart) / (nextCardEnd - nextCardStart));
+        scale = 1 - nextProgress * 0.04;
+        opacity = 1 - nextProgress * 0.45;
+        y = -nextProgress * 45; // Pull underlying cards upward slightly
+      }
+    }
+    
+    return {
+      transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
+      opacity,
+      transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
+    };
+  };
 
   return (
-    <div 
-      ref={wrapperRef} 
-      className={`scroll-stack-wrapper relative w-full ${className}`}
-      style={{ height: `${totalCards * 140}vh` }}
-    >
+    <>
+      {/* Mobile Touch-Friendly Sticky Stack Layout */}
       <div 
-        ref={stickyRef} 
-        className="w-full h-screen flex flex-col justify-center items-center overflow-hidden bg-slate-950"
-        style={{ backgroundColor: '#030712' }}
+        ref={wrapperMobileRef} 
+        className={`block lg:hidden scroll-stack-wrapper relative w-full ${className}`}
+        style={{ height: `${totalCards * 90}vh` }}
       >
-        {/* Core Presentation Window */}
         <div 
-          ref={cardsContainerRef} 
-          className="relative w-full h-full overflow-hidden"
+          ref={stickyMobileRef} 
+          className="sticky top-[80px] w-full h-[85vh] flex flex-col justify-center items-center overflow-hidden bg-slate-950"
+          style={{ backgroundColor: '#030712' }}
         >
-          {childrenArray.map((child, idx) => {
-            if (React.isValidElement(child)) {
-              return (
-                <div 
-                  key={idx}
-                  className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden"
-                  style={{ 
-                    zIndex: activeIndex === idx ? 20 : 10 - idx
-                  }}
-                >
-                  {/* Clone and inject indicators */}
-                  {React.cloneElement(child as React.ReactElement<any>, {
-                    cardIndex: idx,
-                    totalCards: totalCards,
-                    isActive: activeIndex === idx
-                  })}
-                </div>
-              );
-            }
-            return child;
-          })}
-        </div>
-
-        {/* Scroll Progress line overlay (Minimal and elegant bottom bar) */}
-        <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white-pure/10 z-30 select-none pointer-events-none">
-          <div 
-            className="h-full bg-gradient-to-r from-primary via-secondary to-accent-pure transition-all duration-300 ease-out"
-            style={{ width: `${((activeIndex + 1) / totalCards) * 100}%` }}
-          />
+          <div className="relative w-full h-full overflow-hidden">
+            {childrenArray.map((child, idx) => {
+              if (React.isValidElement(child)) {
+                const transformStyles = getCardTransform(idx);
+                return (
+                  <div 
+                    key={idx}
+                    className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden p-2 sm:p-6"
+                    style={{ 
+                      zIndex: 10 + idx,
+                      ...transformStyles
+                    }}
+                  >
+                    <div className="w-[94%] max-w-2xl mx-auto h-[90%] relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-slate-900/20">
+                      {React.cloneElement(child as React.ReactElement<any>, {
+                        cardIndex: idx,
+                        totalCards: totalCards,
+                        isActive: true
+                      })}
+                    </div>
+                  </div>
+                );
+              }
+              return child;
+            })}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Desktop GSAP Pinning Stack Layout */}
+      <div 
+        ref={wrapperRef} 
+        className={`hidden lg:block scroll-stack-wrapper relative w-full ${className}`}
+      >
+        <div className="w-full h-full relative">
+          <div 
+            ref={stickyRef} 
+            className="w-full h-screen flex flex-col justify-center items-center overflow-hidden bg-slate-950"
+            style={{ backgroundColor: '#030712' }}
+          >
+            {/* Core Presentation Window */}
+            <div 
+              ref={cardsContainerRef} 
+              className="relative w-full h-full overflow-hidden"
+            >
+              {childrenArray.map((child, idx) => {
+                if (React.isValidElement(child)) {
+                  return (
+                    <div 
+                      key={idx}
+                      className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden"
+                      style={{ 
+                        zIndex: activeIndex === idx ? 20 : 10 - idx
+                      }}
+                    >
+                      {/* Clone and inject indicators */}
+                      {React.cloneElement(child as React.ReactElement<any>, {
+                        cardIndex: idx,
+                        totalCards: totalCards,
+                        isActive: activeIndex === idx
+                      })}
+                    </div>
+                  );
+                }
+                return child;
+              })}
+            </div>
+
+            {/* Scroll Progress line overlay (Minimal and elegant bottom bar) */}
+            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white-pure/10 z-30 select-none pointer-events-none">
+              <div 
+                className="h-full bg-gradient-to-r from-primary via-secondary to-accent-pure transition-all duration-300 ease-out"
+                style={{ width: `${((activeIndex + 1) / totalCards) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

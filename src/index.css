@@ -162,38 +162,7 @@ select option {
   color: #FFFFFF !important;
 }
 
-/* Mobile navbar — always readable on blue bar; desktop top stays transparent */
-@media (max-width: 1023px) {
-  nav.site-navbar {
-    background-color: #1e3a8a !important;
-  }
-
-  nav.site-navbar .navbar-brand-text,
-  nav.site-navbar .navbar-mobile-cta {
-    color: #ffffff !important;
-  }
-
-  nav.site-navbar .navbar-mobile-cta {
-    border-color: rgba(255, 255, 255, 0.25) !important;
-  }
-
-  nav.site-navbar .nav-menu-toggle,
-  nav.site-navbar .nav-menu-toggle svg {
-    color: #ffffff !important;
-    stroke: currentColor !important;
-  }
-}
-
-@media (min-width: 1024px) {
-  nav.site-navbar.navbar--top {
-    background-color: transparent !important;
-    border-bottom-color: transparent !important;
-  }
-
-  nav.site-navbar.navbar--top .navbar-brand-text {
-    color: #1e3a8a !important;
-  }
-}
+/* Mobile navbar — solid styling defaults */
 
 /* Text inside specific accent elements */
 .text-primary {

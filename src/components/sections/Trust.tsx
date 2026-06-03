@@ -1,18 +1,19 @@
-import { Share2, DollarSign, Target, Briefcase, Activity, CheckCircle } from 'lucide-react';
+import { Share2, DollarSign, Target, Briefcase, Activity, CheckCircle, Zap, Building2, Sprout, Ruler, Home, Paintbrush, Wind, Music, Newspaper, GraduationCap } from 'lucide-react';
 
 export const Trust = () => {
   const clients = [
-    { name: 'DEQUALITA PROJECTS', icon: '⚡' },
-    { name: 'AGK GROUP', icon: '🏢' },
-    { name: 'AGK AGRICULTURE', icon: '🌾' },
-    { name: 'KVV DESIGNS', icon: '📐' },
-    { name: 'AGK HOMES', icon: '🏠' },
-    { name: 'INTERIOR HOMS', icon: '🛋️' },
-    { name: 'LAUNDRYOURS', icon: '🧼' },
-    { name: 'SPARK DANCE ACADEMY', icon: '💃' },
-    { name: 'IJACM', icon: '📰' },
-    { name: 'SCHOLAR SPHERE', icon: '🎓' },
+    { name: 'DEQUALITA PROJECTS', icon: Zap },
+    { name: 'AGK GROUP', icon: Building2 },
+    { name: 'AGK AGRICULTURE', icon: Sprout },
+    { name: 'KVV DESIGNS', icon: Ruler },
+    { name: 'AGK HOMES', icon: Home },
+    { name: 'INTERIOR HOMS', icon: Paintbrush },
+    { name: 'LAUNDRYOURS', icon: Wind },
+    { name: 'SPARK DANCE ACADEMY', icon: Music },
+    { name: 'IJACM', icon: Newspaper },
+    { name: 'SCHOLAR SPHERE', icon: GraduationCap },
   ];
+
 
   // Double the clients list for infinite scroll marquee
   const tickerClients = [...clients, ...clients];
@@ -84,15 +85,18 @@ export const Trust = () => {
         {/* Client Logos Ticker */}
         <div className="w-full relative overflow-hidden py-4 logo-mask">
           <div className="flex w-max gap-8 animate-infinite-scroll pause-on-hover">
-            {tickerClients.map((client, index) => (
-              <div 
-                key={index} 
-                className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors cursor-pointer"
-              >
-                <span className="text-lg">{client.icon}</span>
-                <span className="text-xs font-bold tracking-wider text-slate-800 whitespace-nowrap">{client.name}</span>
-              </div>
-            ))}
+            {tickerClients.map((client, index) => {
+              const IconComp = client.icon;
+              return (
+                <div 
+                  key={index} 
+                  className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors cursor-pointer group"
+                >
+                  <IconComp className="w-4 h-4 text-primary shrink-0 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-xs font-bold tracking-wider text-slate-800 whitespace-nowrap">{client.name}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 

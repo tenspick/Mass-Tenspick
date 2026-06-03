@@ -15,7 +15,8 @@ import Faq from './components/sections/Faq';
 import Contact from './components/sections/Contact';
 import Footer from './components/sections/Footer';
 import WhyChooseTenspick from './components/sections/WhyChooseTenspick';
-import GooeyText from './components/ui/GooeyText';
+import VaporizeTextCycle from './components/ui/VaporizeTextCycle';
+import { SparklesText } from './components/ui/SparklesText';
 import WhyMaasPage from './pages/WhyMaasPage';
 import ServicesPage from './pages/ServicesPage';
 import HowItWorksPage from './pages/HowItWorksPage';
@@ -27,19 +28,9 @@ import ContactPage from './pages/ContactPage';
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const [introPhase, setIntroPhase] = useState<'vaporize' | 'sparkles'>('vaporize');
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
-
-  const introTexts = [
-    "Generating Leads...",
-    "Optimizing Campaigns...",
-    "Analyzing Performance...",
-    "Maximizing ROI...",
-    "TENSPICK MAAS",
-    "Scale Smarter.",
-    "Grow Faster.",
-    "TENSPICK MAAS"
-  ];
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -90,6 +81,16 @@ function App() {
     };
   }, [showIntro]);
 
+  // Auto-dismiss after SparklesText plays for a short duration
+  useEffect(() => {
+    if (introPhase === 'sparkles' && showIntro) {
+      const timer = setTimeout(() => {
+        setShowIntro(false);
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [introPhase, showIntro]);
+
 
   const renderPage = () => {
     switch (currentHash) {
@@ -114,6 +115,73 @@ function App() {
             <Hero />
             <Trust />
             <WhyMaas />
+
+            {/* Visual Divider / Section Header */}
+            <div className="bg-[#FFFFFF] pt-24 pb-12 text-center flex flex-col gap-4 border-t border-slate-100 relative">
+              <div className="max-w-4xl mx-auto px-6 flex flex-col gap-3">
+                <motion.span
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-xs font-bold tracking-widest text-primary uppercase font-mono"
+                >
+                  Operational Philosophy
+                </motion.span>
+                <motion.h2
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight uppercase"
+                >
+                  The Core Difference
+                </motion.h2>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-slate-550 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed"
+                >
+                  Moving beyond simple software triggers to build custom, end-to-end user acquisition pipelines.
+                </motion.p>
+              </div>
+            </div>
+
+            {/* Premium Dark Section Break Banner */}
+            <div className="bg-[#030712] py-24 sm:py-32 px-6 md:px-12 relative overflow-hidden border-b border-slate-800 flex flex-col justify-center items-center text-center">
+              {/* Background glow effects */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-primary/10 blur-[120px] pointer-events-none" />
+              <div className="absolute inset-0 bg-grid-lines opacity-5 pointer-events-none" />
+              
+              <div className="max-w-4xl mx-auto flex flex-col gap-6 relative z-10">
+                <motion.span
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6 }}
+                  className="text-xs font-bold tracking-[0.25em] text-blue-500 uppercase font-mono"
+                >
+                  Philosophy // Direction
+                </motion.span>
+                <motion.h3
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8, delay: 0.1 }}
+                  className="text-3xl sm:text-6xl font-black text-white-pure tracking-tight leading-none uppercase"
+                >
+                  Beyond Automation.<br className="sm:hidden" /> Built For Business.
+                </motion.h3>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed font-medium"
+                >
+                  Funnels alone don't grow companies. Integrated systems, clean code, high-converting digital assets, and strategic execution do.
+                </motion.p>
+              </div>
+            </div>
             <WhyChooseTenspick />
             <Services />
             <HowItWorks />
@@ -132,17 +200,53 @@ function App() {
       {showIntro ? (
         <div 
           onClick={() => setShowIntro(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-white p-4 cursor-pointer select-none"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white p-6 cursor-pointer select-none"
           title="Click anywhere to skip intro"
         >
-          <div className="max-w-2xl w-full pointer-events-none">
-            <GooeyText 
-              texts={introTexts} 
-              morphTime={0.9} 
-              cooldownTime={0.25}
-              textClassName="text-primary font-black tracking-tight"
-              onComplete={() => setShowIntro(false)} 
-            />
+          <div className="max-w-3xl w-full flex items-center justify-center pointer-events-none">
+            {introPhase === 'vaporize' ? (
+              <VaporizeTextCycle
+                texts={[
+                  "We don't just automate connections.",
+                  "We create",
+                  "Meaningful business connections."
+                ]}
+                font={{
+                  fontFamily: "Outfit, Inter, sans-serif",
+                  fontSize: typeof window !== "undefined" && window.innerWidth < 768 ? "24px" : "40px",
+                  fontWeight: 700
+                }}
+                color="rgb(37, 99, 235)"
+                spread={4}
+                density={4}
+                animation={{
+                  vaporizeDuration: 1.2,
+                  fadeInDuration: 0.6,
+                  waitDuration: 1.6
+                }}
+                direction="left-to-right"
+                alignment="center"
+                onComplete={() => setIntroPhase('sparkles')}
+              />
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="flex items-center justify-center"
+              >
+                <SparklesText 
+                  text="TENSPICK MAAS" 
+                  className="text-4xl sm:text-6xl md:text-7xl font-bold text-center text-[#2563EB]"
+                  colors={{ first: "#2563EB", second: "#00D4FF" }}
+                />
+              </motion.div>
+            )}
+          </div>
+          <div className="absolute bottom-10 left-0 right-0 text-center pointer-events-none">
+            <span className="text-[10px] uppercase tracking-widest text-[#2563EB]/40 font-mono font-bold">
+              Click anywhere or scroll to skip
+            </span>
           </div>
         </div>
       ) : (

@@ -104,26 +104,23 @@ export default function ContactPage() {
 
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
+    const mailtoEmail = 'tenspickofficial@gmail.com';
+    const subject = `TENSPICK Inquiry from ${form.firstName} ${form.lastName}`;
+    const body = `First Name: ${form.firstName}\nLast Name: ${form.lastName}\nEmail: ${form.email}\nPhone: ${form.phone || 'Not Provided'}\nService: ${form.service}\n\nMessage:\n${form.message}`;
 
-      // Launch Confetti
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 },
-        colors: ['#2563EB', '#00D4FF', '#6C63FF', '#FFFFFF']
-      });
+    const mailtoUrl = `mailto:${mailtoEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
 
-      // Construct Mailto Client Link
-      const mailtoEmail = 'tenspickofficial@gmail.com';
-      const subject = `TENSPICK Inquiry from ${form.firstName} ${form.lastName}`;
-      const body = `First Name: ${form.firstName}\nLast Name: ${form.lastName}\nEmail: ${form.email}\nPhone: ${form.phone || 'Not Provided'}\nService: ${form.service}\n\nMessage:\n${form.message}`;
+    setLoading(false);
+    setSuccess(true);
 
-      const mailtoUrl = `mailto:${mailtoEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailtoUrl;
-    }, 1200);
+    // Launch Confetti
+    confetti({
+      particleCount: 150,
+      spread: 80,
+      origin: { y: 0.6 },
+      colors: ['#2563EB', '#00D4FF', '#6C63FF', '#FFFFFF']
+    });
   };
 
   const handleConsultationClick = () => {
@@ -289,7 +286,7 @@ export default function ContactPage() {
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="py-16 flex flex-col items-center justify-center text-center gap-6 relative z-10"
+                  className="py-8 flex flex-col items-center justify-center text-center gap-6 relative z-10 text-slate-900"
                 >
                   <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
                     <CheckCircle className="w-8 h-8" />
@@ -297,12 +294,40 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-xl font-bold text-slate-900 mb-2">Message Pre-filled Successfully</h3>
                     <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
-                      Your details have been passed to your email client. Simply hit send to deliver them to <strong className="text-primary font-bold">tenspickofficial@gmail.com</strong>.
+                      Your details have been passed to your email client. Please click **Send** to finalize submission.
                     </p>
                   </div>
+
+                  {/* Backup copy box */}
+                  <div className="w-full max-w-md bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-3">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block text-left">
+                      Backup Details (Send to tenspickofficial@gmail.com):
+                    </span>
+                    <textarea
+                      readOnly
+                      value={`To: tenspickofficial@gmail.com\nSubject: TENSPICK Inquiry from ${form.firstName} ${form.lastName}\n\nFirst Name: ${form.firstName}\nLast Name: ${form.lastName}\nEmail: ${form.email}\nPhone: ${form.phone || 'Not Provided'}\nService: ${form.service}\n\nMessage:\n${form.message}`}
+                      className="w-full h-32 bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-650 font-mono focus:outline-none resize-none"
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        const text = `First Name: ${form.firstName}\nLast Name: ${form.lastName}\nEmail: ${form.email}\nPhone: ${form.phone || 'Not Provided'}\nService: ${form.service}\n\nMessage:\n${form.message}`;
+                        navigator.clipboard.writeText(text);
+                        alert('Details copied to clipboard!');
+                      }}
+                      className="w-full text-xs py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold rounded-lg transition-colors cursor-pointer"
+                    >
+                      Copy Details to Clipboard
+                    </button>
+                  </div>
+
                   <button 
-                    onClick={() => setSuccess(false)}
-                    className="px-6 py-2.5 rounded-xl border border-slate-200 hover:border-slate-350 text-xs font-semibold transition-colors"
+                    type="button"
+                    onClick={() => {
+                      setSuccess(false);
+                      setForm({ firstName: '', lastName: '', email: '', phone: '', service: 'Select a service', message: '' });
+                    }}
+                    className="px-6 py-2.5 rounded-xl border border-slate-200 hover:border-slate-350 text-xs font-semibold transition-colors cursor-pointer"
                   >
                     Submit another inquiry
                   </button>
