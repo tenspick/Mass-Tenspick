@@ -10,11 +10,12 @@ import Services from './components/sections/Services';
 import HowItWorks from './components/sections/HowItWorks';
 import BusinessTypes from './components/sections/BusinessTypes';
 import AiAutomation from './components/sections/AiAutomation';
-import CaseStudies from './components/sections/CaseStudies';
+
 import Faq from './components/sections/Faq';
 import Contact from './components/sections/Contact';
 import Footer from './components/sections/Footer';
 import WhyChooseTenspick from './components/sections/WhyChooseTenspick';
+
 import VaporizeTextCycle from './components/ui/VaporizeTextCycle';
 import { SparklesText } from './components/ui/SparklesText';
 import WhyMaasPage from './pages/WhyMaasPage';
@@ -116,78 +117,11 @@ function App() {
             <Trust />
             <WhyMaas />
 
-            {/* Visual Divider / Section Header */}
-            <div className="bg-[#FFFFFF] pt-24 pb-12 text-center flex flex-col gap-4 border-t border-slate-100 relative">
-              <div className="max-w-4xl mx-auto px-6 flex flex-col gap-3">
-                <motion.span
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="text-xs font-bold tracking-widest text-primary uppercase font-mono"
-                >
-                  Operational Philosophy
-                </motion.span>
-                <motion.h2
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight uppercase"
-                >
-                  The Core Difference
-                </motion.h2>
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="text-slate-550 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed"
-                >
-                  Moving beyond simple software triggers to build custom, end-to-end user acquisition pipelines.
-                </motion.p>
-              </div>
-            </div>
-
-            {/* Premium Dark Section Break Banner */}
-            <div className="bg-[#030712] py-24 sm:py-32 px-6 md:px-12 relative overflow-hidden border-b border-slate-800 flex flex-col justify-center items-center text-center">
-              {/* Background glow effects */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-primary/10 blur-[120px] pointer-events-none" />
-              <div className="absolute inset-0 bg-grid-lines opacity-5 pointer-events-none" />
-              
-              <div className="max-w-4xl mx-auto flex flex-col gap-6 relative z-10">
-                <motion.span
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6 }}
-                  className="text-xs font-bold tracking-[0.25em] text-blue-500 uppercase font-mono"
-                >
-                  Philosophy // Direction
-                </motion.span>
-                <motion.h3
-                  initial={{ opacity: 0, y: 25 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: 0.1 }}
-                  className="text-3xl sm:text-6xl font-black text-white-pure tracking-tight leading-none uppercase"
-                >
-                  Beyond Automation.<br className="sm:hidden" /> Built For Business.
-                </motion.h3>
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed font-medium"
-                >
-                  Funnels alone don't grow companies. Integrated systems, clean code, high-converting digital assets, and strategic execution do.
-                </motion.p>
-              </div>
-            </div>
-            <WhyChooseTenspick />
             <Services />
             <HowItWorks />
             <BusinessTypes />
             <AiAutomation />
-            <CaseStudies />
+            <WhyChooseTenspick />
             <Faq />
             <Contact />
           </>

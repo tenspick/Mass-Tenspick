@@ -125,6 +125,20 @@ export const AiAutomation = () => {
         </div>
       ),
       bg: '#2E1065'
+    },
+    {
+      stepCounter: "06 // NEXT-GEN GROWTH",
+      categoryLabel: "Paid Growth Engine",
+      headline: "Growth Advertising",
+      supportingText: "Meta & Google Ads at Scale",
+      description: "Performance Creative: AI-generated ad variants tested and scaled automatically. Budget Optimization: Dynamic spend allocation across channels based on real-time ROAS signals.",
+      interactionElement: (
+        <div className="flex items-center gap-2 text-white-pure/60">
+          <BarChart2 className="w-4 h-4 text-accent-pure" />
+          <span>Ads Engine</span>
+        </div>
+      ),
+      bg: '#064E3B'
     }
   ];
 

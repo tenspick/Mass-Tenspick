@@ -1,7 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import ScrollStack, { ScrollStackItem } from '../ui/ScrollStack';
-import { Target, Cpu, Hammer, BarChart3 } from 'lucide-react';
+import { Target, Cpu, BarChart3 } from 'lucide-react';
 
 export const WhyChooseTenspick = () => {
   const cards = [
@@ -39,61 +38,6 @@ export const WhyChooseTenspick = () => {
 
   return (
     <section className="bg-[#030712] border-t border-slate-800">
-      {/* Intro Section */}
-      <div className="w-full flex flex-col justify-center items-center text-center px-6 md:px-12 relative overflow-hidden bg-[#030712] py-20 border-b border-slate-850">
-        {/* Ambient background animations */}
-        <div className="absolute inset-0 pointer-events-none opacity-20">
-          <div className="absolute top-[25%] left-[15%] w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-[25%] right-[15%] w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        </div>
-
-        <div className="max-w-4xl mx-auto flex flex-col gap-6 relative z-10">
-          <motion.span 
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-xs font-bold tracking-widest text-blue-500 uppercase font-mono"
-          >
-            Why Choose Tenspick
-          </motion.span>
-          <motion.h2 
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-4xl sm:text-7xl font-black text-white-pure tracking-tight leading-none"
-          >
-            Why Choose Tenspick
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-slate-400 text-sm sm:text-lg max-w-3xl mx-auto leading-relaxed"
-          >
-            At Tenspick, we believe in traction over talk, and execution over presentation slides. We are a unified group of veteran developers, designers, copywriters, and media buyers who work as a single team to build and launch high-converting digital assets and automated acquisition funnels. Instead of managing multiple fragmented agencies and freelancers, we provide everything your business needs to grow under one scalable, flat monthly subscription. Our goal is to remove friction, build systems that generate compounding daily returns, and connect you directly with qualified opportunities.
-          </motion.p>
-          
-          {/* Subtle animated box indicator */}
-          <div className="flex justify-center gap-3 mt-6">
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                initial={{ scale: 0, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 0.6 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", stiffness: 100, delay: 0.4 + i * 0.1 }}
-                className={`w-2.5 h-2.5 rounded-full ${
-                  i === 0 ? 'bg-primary' : i === 1 ? 'bg-secondary' : 'bg-accent'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
       <ScrollStack>
         {cards.map((card, idx) => {
           const Icon = card.icon;

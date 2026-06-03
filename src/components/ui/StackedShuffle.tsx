@@ -39,43 +39,8 @@ export const StackedShuffle: React.FC<StackedShuffleProps> = ({ cards }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Desktop Pinning and Scroll-Driven Shuffling
-  useEffect(() => {
-    if (isMobile) return;
-    if (!containerRef.current || !pinRef.current) return;
+  // No GSAP pin — section is interactive via click/drag/dots
 
-    let ctx: gsap.Context;
-    const timer = setTimeout(() => {
-      ctx = gsap.context(() => {
-        ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: "top top",
-          end: () => `+=${cards.length * 350}`, // Scroll distance for shuffles
-          pin: pinRef.current,
-          pinSpacing: true,
-          scrub: 0.1,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const segment = 1 / cards.length;
-            const currentIdx = Math.min(
-              Math.floor(progress / segment),
-              cards.length - 1
-            );
-            setActiveIndex(currentIdx);
-          }
-        });
-      }, containerRef);
-
-      ScrollTrigger.refresh();
-    }, 1000);
-
-    return () => {
-      clearTimeout(timer);
-      if (ctx) ctx.revert();
-      ScrollTrigger.refresh();
-    };
-  }, [cards.length, isMobile]);
 
   // Derived card order based on activeIndex
   const order = useMemo(() => {
@@ -103,7 +68,7 @@ export const StackedShuffle: React.FC<StackedShuffleProps> = ({ cards }) => {
             <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-none uppercase">
               What We Build
             </h2>
-            <p className="text-slate-650 text-sm sm:text-base leading-relaxed">
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
               We build intelligent, automated systems that run in the background to grow your business. 
               From conversational AI chatbots to CRM deal pipelines, these acquisition setups run 24/7 on autopilot.
             </p>
@@ -113,7 +78,9 @@ export const StackedShuffle: React.FC<StackedShuffleProps> = ({ cards }) => {
                 "Conversational AI: 24/7 natural-language qualifiers",
                 "Messaging: Multi-channel follow-ups on WhatsApp & Email",
                 "CRM Integrations: Direct deal logs with no data entry",
-                "Dashboard reporting & analytics tracked live"
+                "Dashboard reporting & analytics tracked live",
+                "Performance Ads: AI-optimized Meta & Google campaigns",
+                "Predictive Analytics: Smart reporting sent automatically"
               ].map((bullet, idx) => (
                 <div key={idx} className="flex items-center gap-3 text-xs sm:text-sm font-semibold text-slate-800">
                   <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
@@ -124,14 +91,50 @@ export const StackedShuffle: React.FC<StackedShuffleProps> = ({ cards }) => {
               ))}
             </div>
 
-            {/* Shuffle Trigger Button */}
-            <button
-              onClick={handleShuffle}
-              className="flex items-center gap-2.5 px-6 py-3.5 bg-primary text-white-pure rounded-xl hover:brightness-110 active:scale-95 transition-all text-xs font-bold w-fit mt-4 shadow-lg shadow-primary/20 cursor-pointer"
-            >
-              Next System Architecture
-              <RefreshCw className="w-4 h-4 animate-spin-slow" />
-            </button>
+            {/* Controls row */}
+            <div className="flex items-center gap-4 mt-2 flex-wrap">
+              {/* Prev button */}
+              <button
+                onClick={() => setActiveIndex((prev) => (prev - 1 + cards.length) % cards.length)}
+                className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-slate-500 hover:text-primary cursor-pointer"
+                title="Previous card"
+              >
+                ‹
+              </button>
+
+              {/* Shuffle / Next button */}
+              <button
+                onClick={handleShuffle}
+                className="flex items-center gap-2.5 px-5 py-3 bg-primary text-white-pure rounded-xl hover:brightness-110 active:scale-95 transition-all text-xs font-bold shadow-lg shadow-primary/20 cursor-pointer"
+              >
+                Next System
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Card counter */}
+              <span className="text-xs font-mono text-slate-400 font-semibold">
+                {String(activeIndex + 1).padStart(2, '0')} / {String(cards.length).padStart(2, '0')}
+              </span>
+            </div>
+
+            {/* Progress dots */}
+            <div className="flex items-center gap-2">
+              {cards.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveIndex(i)}
+                  className={`rounded-full transition-all duration-300 cursor-pointer ${
+                    i === activeIndex
+                      ? 'w-6 h-2 bg-primary'
+                      : 'w-2 h-2 bg-slate-200 hover:bg-slate-300'
+                  }`}
+                />
+              ))}
+            </div>
+
+            <p className="text-[11px] text-slate-400 font-mono">
+              ↑ Scroll or click cards to explore systems
+            </p>
           </div>
 
           {/* Right Side Stack deck */}

@@ -135,13 +135,11 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
     
     const handleScroll = () => {
       if (!wrapperMobileRef.current) return;
-      const rect = wrapperMobileRef.current.getBoundingClientRect();
-      const elementHeight = rect.height;
-      const viewportHeight = window.innerHeight;
-      
-      const scrolled = -rect.top;
-      const scrollable = elementHeight - viewportHeight;
-      const progress = Math.max(0, Math.min(1, scrolled / (scrollable || 1)));
+      const el = wrapperMobileRef.current;
+      const rect = el.getBoundingClientRect();
+      const scrolled = -rect.top; // pixels scrolled past the top of the element
+      const scrollable = rect.height - window.innerHeight;
+      const progress = scrollable > 0 ? Math.max(0, Math.min(1, scrolled / scrollable)) : 0;
       setMobileScrollProgress(progress);
     };
 
@@ -248,43 +246,47 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
   const getCardTransform = (idx: number) => {
     if (!isMobile) return {};
     
+    // Card 0 is always fully visible at scroll start
+    // Each card fades in over its own segment of scroll
     const segment = 1 / totalCards;
-    const startFadeIn = (idx - 0.7) * segment;
-    const endFadeIn = idx * segment;
+
+    // Card 0: visible immediately; subsequent cards slide up from below
+    const fadeInStart = idx === 0 ? 0 : (idx - 0.8) * segment;
+    const fadeInEnd   = idx === 0 ? 0 : idx * segment;
     
-    let y = 350; // Initial slide-up position
-    let opacity = 0;
-    let scale = 0.94;
+    let y = idx === 0 ? 0 : 300;
+    let opacity = idx === 0 ? 1 : 0;
+    let scale = idx === 0 ? 1 : 0.93;
     
-    if (mobileScrollProgress < startFadeIn) {
-      y = 350;
-      opacity = 0;
-      scale = 0.94;
-    } else if (mobileScrollProgress >= startFadeIn && mobileScrollProgress <= endFadeIn) {
-      const p = (mobileScrollProgress - startFadeIn) / (endFadeIn - startFadeIn);
-      y = 350 * (1 - p);
-      opacity = p;
-      scale = 0.94 + p * 0.06;
-    } else {
-      y = 0;
-      opacity = 1;
-      scale = 1;
-      
-      // Fade out and scale down card when a subsequent card stacks on top
-      const nextCardStart = (idx + 0.2) * segment;
-      const nextCardEnd = (idx + 0.8) * segment;
-      if (mobileScrollProgress > nextCardStart) {
-        const nextProgress = Math.min(1, (mobileScrollProgress - nextCardStart) / (nextCardEnd - nextCardStart));
-        scale = 1 - nextProgress * 0.04;
-        opacity = 1 - nextProgress * 0.45;
-        y = -nextProgress * 45; // Pull underlying cards upward slightly
+    if (idx > 0) {
+      if (mobileScrollProgress < fadeInStart) {
+        y = 300; opacity = 0; scale = 0.93;
+      } else if (mobileScrollProgress <= fadeInEnd) {
+        const p = (mobileScrollProgress - fadeInStart) / Math.max(0.001, fadeInEnd - fadeInStart);
+        y = 300 * (1 - p);
+        opacity = p;
+        scale = 0.93 + p * 0.07;
+      } else {
+        y = 0; opacity = 1; scale = 1;
+      }
+    }
+
+    // Fade out and scale down card when a subsequent card stacks on top
+    if (idx < totalCards - 1) {
+      const pushStart = (idx + 0.5) * segment;
+      const pushEnd   = (idx + 1.0) * segment;
+      if (mobileScrollProgress > pushStart) {
+        const p = Math.min(1, (mobileScrollProgress - pushStart) / Math.max(0.001, pushEnd - pushStart));
+        scale = (idx === 0 ? 1 : scale) - p * 0.04;
+        opacity = (idx === 0 ? 1 : opacity) - p * 0.5;
+        y = (idx === 0 ? 0 : y) - p * 40;
       }
     }
     
     return {
       transform: `translate3d(0, ${y}px, 0) scale(${scale})`,
       opacity,
-      transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
+      transition: 'transform 0.08s linear, opacity 0.08s linear'
     };
   };
 
@@ -294,11 +296,11 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
       <div 
         ref={wrapperMobileRef} 
         className={`block lg:hidden scroll-stack-wrapper relative w-full ${className}`}
-        style={{ height: `${totalCards * 90}vh` }}
+        style={{ height: `${totalCards * 110}vh` }}
       >
         <div 
           ref={stickyMobileRef} 
-          className="sticky top-[80px] w-full h-[85vh] flex flex-col justify-center items-center overflow-hidden bg-slate-950"
+          className="sticky top-[80px] w-full h-[90vh] flex flex-col justify-center items-center overflow-hidden bg-slate-950"
           style={{ backgroundColor: '#030712' }}
         >
           <div className="relative w-full h-full overflow-hidden">
@@ -335,47 +337,45 @@ export const ScrollStack: React.FC<ScrollStackProps> = ({
         ref={wrapperRef} 
         className={`hidden lg:block scroll-stack-wrapper relative w-full ${className}`}
       >
-        <div className="w-full h-full relative">
+        <div 
+          ref={stickyRef} 
+          className="w-full h-screen flex flex-col justify-center items-center overflow-hidden bg-slate-950"
+          style={{ backgroundColor: '#030712' }}
+        >
+          {/* Core Presentation Window */}
           <div 
-            ref={stickyRef} 
-            className="w-full h-screen flex flex-col justify-center items-center overflow-hidden bg-slate-950"
-            style={{ backgroundColor: '#030712' }}
+            ref={cardsContainerRef} 
+            className="relative w-full h-full overflow-hidden"
           >
-            {/* Core Presentation Window */}
-            <div 
-              ref={cardsContainerRef} 
-              className="relative w-full h-full overflow-hidden"
-            >
-              {childrenArray.map((child, idx) => {
-                if (React.isValidElement(child)) {
-                  return (
-                    <div 
-                      key={idx}
-                      className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden"
-                      style={{ 
-                        zIndex: activeIndex === idx ? 20 : 10 - idx
-                      }}
-                    >
-                      {/* Clone and inject indicators */}
-                      {React.cloneElement(child as React.ReactElement<any>, {
-                        cardIndex: idx,
-                        totalCards: totalCards,
-                        isActive: activeIndex === idx
-                      })}
-                    </div>
-                  );
-                }
-                return child;
-              })}
-            </div>
+            {childrenArray.map((child, idx) => {
+              if (React.isValidElement(child)) {
+                return (
+                  <div 
+                    key={idx}
+                    className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden"
+                    style={{ 
+                      zIndex: activeIndex === idx ? 20 : 10 - idx
+                    }}
+                  >
+                    {/* Clone and inject indicators */}
+                    {React.cloneElement(child as React.ReactElement<any>, {
+                      cardIndex: idx,
+                      totalCards: totalCards,
+                      isActive: activeIndex === idx
+                    })}
+                  </div>
+                );
+              }
+              return child;
+            })}
+          </div>
 
-            {/* Scroll Progress line overlay (Minimal and elegant bottom bar) */}
-            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white-pure/10 z-30 select-none pointer-events-none">
-              <div 
-                className="h-full bg-gradient-to-r from-primary via-secondary to-accent-pure transition-all duration-300 ease-out"
-                style={{ width: `${((activeIndex + 1) / totalCards) * 100}%` }}
-              />
-            </div>
+          {/* Scroll Progress line overlay (Minimal and elegant bottom bar) */}
+          <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white-pure/10 z-30 select-none pointer-events-none">
+            <div 
+              className="h-full bg-gradient-to-r from-primary via-secondary to-accent-pure transition-all duration-300 ease-out"
+              style={{ width: `${((activeIndex + 1) / totalCards) * 100}%` }}
+            />
           </div>
         </div>
       </div>
