@@ -211,12 +211,6 @@ export const Footer = () => {
             </button>
           </div>
         </div>
-
-        {/* Tiny clean disclaimer */}
-        <div className="pt-6 text-left text-[10px] text-white-pure leading-relaxed border-t border-slate-800/40 mt-6">
-          Disclaimer: TENSPICK MAAS is an on-demand service by Tenspick. Subscribed websites, branding kits, ad campaign creatives, and workflow code pipelines remain the intellectual property of clients. GDPR compliant.
-        </div>
-
       </div>
     </footer>
   );
